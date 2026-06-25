@@ -1,0 +1,52 @@
+{
+  "name": "blender-chatgpt-mcp",
+  "version": "0.1.0",
+  "description": "Local Streamable HTTP MCP server and Blender 5.1+ add-on bridge for safe Codex or ChatGPT control of Blender.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bakaroart/blender-chatgpt-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bakaroart/blender-chatgpt-mcp/issues"
+  },
+  "homepage": "https://github.com/bakaroart/blender-chatgpt-mcp#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "blender-chatgpt-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "bridge:blender": "python3 scripts/run_blender_bridge.py",
+    "demo:mcp": "tsx scripts/use_live_mcp.ts",
+    "showcase:mcp": "tsx scripts/showcase_mcp.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "lint": "eslint src tests scripts/*.ts vitest.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run tests/unit && python3 -m unittest discover -s tests/python",
+    "test:integration": "vitest run tests/integration",
+    "test:blender": "python3 scripts/run_blender_tests.py",
+    "package:addon": "python3 scripts/package_addon.py",
+    "check": "npm run lint && npm run typecheck && npm test && npm run test:integration"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2",
+    "vitest": "^4.1.9"
+  }
+}

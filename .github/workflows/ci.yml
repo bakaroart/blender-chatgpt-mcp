@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+
+      - name: Check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      - name: Package Blender add-on
+        run: npm run package:addon
+
+      - name: Upload Blender add-on artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: blender-mcp-bridge-node-${{ matrix.node-version }}
+          path: dist/blender_chatgpt_bridge.zip
+          if-no-files-found: error
