@@ -310,9 +310,34 @@ Make sure Node.js 20 or newer is installed:
 node --version
 ```
 
+Also make sure you are connected to the internet, because `npm install` downloads packages from the public npm registry.
+
+If `npm install` was interrupted and a later run mentions `ENOTEMPTY`, remove the half-installed dependency folder and run it again:
+
+```bash
+rm -rf node_modules
+npm install
+```
+
+In restricted Codex or sandboxed terminal environments, npm might not be allowed to write to the normal `~/.npm` cache folder. In that case, keep the cache inside the project folder:
+
+```bash
+npm install --cache ./.npm-cache
+```
+
 ### Blender cannot be found
 
 On macOS, install Blender in `/Applications`. If Blender is somewhere else, set `BLENDER_BIN` to the Blender executable path before running helper scripts.
+
+### `npm run test:blender` crashes Blender
+
+The Blender smoke test is mainly for contributors. If Blender exits before printing any `SMOKE TEST FAILED` message and writes a `blender.crash.txt` file, first check whether Blender itself can run in background mode:
+
+```bash
+/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python-expr 'print("Blender background mode works")'
+```
+
+If that command also crashes, it is a local Blender/background-mode issue rather than an MCP bridge setup issue. Open Blender normally and continue with the add-on setup from Step 2.
 
 ### `/readyz` says `BRIDGE_UNAVAILABLE`
 
@@ -362,19 +387,22 @@ Run Blender smoke tests when Blender is installed:
 npm run test:blender
 ```
 
-## Public Repository Safety
+## If You Fork Or Contribute
 
-The following files and folders should not be committed:
+Normal users do not need to do anything in this section.
+
+If you fork this repository, open a pull request, or publish your own changes, keep private local files out of GitHub. Check that these files and folders are not committed:
 
 - `.env`
 - `dist/`
 - `node_modules/`
+- `.npm-cache/`
 - rendered previews
 - personal `.blend` outputs
 - Codex or ChatGPT auth files
 - OpenAI API keys or access tokens
 
-The included `.gitignore` already ignores the common local outputs.
+The included `.gitignore` already ignores the common local outputs, but it is still worth checking before you push.
 
 ## More Documentation
 
