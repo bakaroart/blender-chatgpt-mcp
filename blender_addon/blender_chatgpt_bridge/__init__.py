@@ -38,7 +38,7 @@ def _auto_start() -> None:
 
 
 @persistent
-def _quit_pre(_dummy: object) -> None:
+def _exit_pre(_dummy: object) -> None:
     from . import bridge_server
 
     bridge_server.stop_bridge()
@@ -66,8 +66,8 @@ def register() -> None:
     )
     for cls in classes:
         bpy.utils.register_class(cls)
-    if _quit_pre not in bpy.app.handlers.quit_pre:
-        bpy.app.handlers.quit_pre.append(_quit_pre)
+    if _exit_pre not in bpy.app.handlers.exit_pre:
+        bpy.app.handlers.exit_pre.append(_exit_pre)
     bpy.app.timers.register(_auto_start, first_interval=1.0)
 
 
@@ -93,7 +93,7 @@ def unregister() -> None:
         BLENDER_CHATGPT_PT_bridge,
     )
     bridge_server.stop_bridge()
-    if _quit_pre in bpy.app.handlers.quit_pre:
-        bpy.app.handlers.quit_pre.remove(_quit_pre)
+    if _exit_pre in bpy.app.handlers.exit_pre:
+        bpy.app.handlers.exit_pre.remove(_exit_pre)
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
